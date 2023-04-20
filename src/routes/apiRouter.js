@@ -12,15 +12,15 @@ apiRouter.post('/create-checkout-session', async (req, res) => {
           price_data: {
           currency: 'usd',
           product_data: {
-            name: el.bookName,
-            images: el.image,
+            name: el.title,
+            images: [el.image],
             metadata: {
                 id: el.bookId,
             }
           },
           unit_amount: el.price * 100,
         },
-        quantity: el.length,
+        quantity: el.quantity,
         }
     })
 
