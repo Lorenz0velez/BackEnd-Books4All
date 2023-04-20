@@ -3,7 +3,6 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser')
 const mainRouter = require('./routes');
 require('dotenv')
-
 const server = express();
 server.use(express.json());
 server.use(morgan('dev'));

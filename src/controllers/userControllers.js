@@ -1,4 +1,6 @@
+const { log } = require('console')
 const {User} = require('../DB_connection')
+const {Role} = require('../DB_connection')
 
 const getAllUsers = async () =>{
     const users = await User.findAll({
