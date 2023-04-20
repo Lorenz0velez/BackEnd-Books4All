@@ -28,9 +28,9 @@ usersRouter.get('/:userId', async (req, res) => {
 })
 
 usersRouter.post('/', async (req, res) =>{
-    let {name, picture, email} = req.body;
+    let {nickname, picture, email} = req.body;
     try {
-        let user = await createUser(name, picture, email)
+        let user = await createUser(nickname, picture, email)
         res.status(200).send(user)
     } catch (error) {
         res.status(400).send({error: error.message})

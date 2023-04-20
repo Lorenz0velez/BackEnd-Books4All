@@ -3,7 +3,6 @@ const {Role} = require('../DB_connection')
 
 const authorizationMiddleware = async (req, res, next) => {
     const {user_name} = req.body; // asumiendo que el usuario se ha autenticado y se ha adjuntado a req.user
-
     const user = await User.findOne({
         where: {name: user_name}
     })

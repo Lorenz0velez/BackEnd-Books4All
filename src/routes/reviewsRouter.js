@@ -30,6 +30,8 @@ reviewsRouter.post('/', checkAuth, authorizationMiddleware, async (req, res) => 
         let response = await createReview(body, rating, book_id, user_name)
         res.status(200).json(response);
     } catch (error) {
+        console.log(error.message)
+        console.log("no esta ingresado el usuario");
         res.status(400).send(error.message)
     }
 })
