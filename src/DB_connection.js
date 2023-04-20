@@ -32,8 +32,6 @@ Reviews.belongsTo(Book);
 
 User.hasMany(Reviews);
 Reviews.belongsTo(User);
-User.hasMany(Reviews);
-Reviews.belongsTo(User);
 User.belongsToMany(Role, {through: 'users_roles'});
 Role.belongsToMany(User, {through: 'users_roles'});
 
