@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { getAllReviews, getReviewDetail, createReview } = require('../controllers/reviewsControllers');
-const authorizationMiddleware = require ('../Middlewares/Middlewares')
+const authorizationMiddleware = require ('../Middlewares/Middlewares');
+const { checkAuth } = require('../Middlewares/auth');
 
 
 const reviewsRouter = Router();
@@ -23,7 +24,7 @@ reviewsRouter.get('/:id', async (req, res) => {
     }
 })
 
-reviewsRouter.post('/', authorizationMiddleware, async (req, res) => {
+reviewsRouter.post('/', checkAuth, authorizationMiddleware, async (req, res) => {
     const { body, rating, book_id, user_name } = req.body;
     try {
         let response = await createReview(body, rating, book_id, user_name)
