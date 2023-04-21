@@ -19,7 +19,11 @@ module.exports = (sequelize) => {
         email: {
             type: DataTypes.STRING,
             allowNull: true,
-        }
+        },
+        active: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
+          }
     }, { timestamps: false,
         save: {
             fields: ['picture']

@@ -1,6 +1,9 @@
 const { Reviews, Book } = require('../DB_connection');
 const getAllReviews = async () => {
     const dbReviews = await Reviews.findAll({
+        where:{
+            active: true
+        },
         include: {
             model: Book
         }
@@ -11,7 +14,8 @@ const getAllReviews = async () => {
 const getReviewDetail = async (id) => {
      const reviewDetail = await Reviews.findOne({
         where: {
-            id: id
+            id: id,
+            active: true
         }, 
         include: {
              model: Book
