@@ -8,6 +8,9 @@ const stripe = Stripe('sk_test_51Mu08BJCQwXBtQNrbOdQorX7ZhZz6SPisSeEQjsAe2RwxFx4
 apiRouter.post('/create-checkout-session', async (req, res) => {
  
     const line_items = req.body.cart.map(el=>{
+
+      if(!el.image) {
+        el.image = 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'}
         return{
           price_data: {
           currency: 'usd',
@@ -28,8 +31,8 @@ apiRouter.post('/create-checkout-session', async (req, res) => {
 
     line_items,
     mode: 'payment',
-    success_url: `${process.env.CLIENT_URL}/checkout-success`,
-    cancel_url: `${process.env.CLIENT_URL}/cart`,
+    success_url: `${process.env.CLIENT_URL}checkout-success`,
+    cancel_url: `${process.env.CLIENT_URL}cart`, 
   });
 
   res.send({url: session.url});
