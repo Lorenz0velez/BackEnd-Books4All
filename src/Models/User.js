@@ -12,15 +12,20 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        image: {
-            type: DataTypes.TEXT
+        picture: {
+            type: DataTypes.TEXT,
+            allowNull: true
         },
         email: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
-        role: {
-            type: DataTypes.STRING
-        }
-    }, { timeStamps: false })
+        active: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
+          }
+    }, { timestamps: false,
+        save: {
+            fields: ['picture']
+          } })
 }

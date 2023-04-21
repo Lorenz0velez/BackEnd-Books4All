@@ -1,37 +1,72 @@
 const {Router} = require('express');
+const { User } = require('../DB_connection')
+const { getAllUsers, getDetailUser, createUser, updateProfilePic} = require('../controllers/userControllers');
+const { loginCtrl, registerCtrl } = require('../controllers/auth');
+
+
 
 const usersRouter = Router ();
 
-usersRouter.get('/', (req,res) => {
+usersRouter.get('/', async (req,res) => {
     const {queryUser} = req.query;
-    if(queryUser){
-        try {
-         res.send('NIY: Esta ruta trae usuarios por query')
-        } catch (error) {
-        res.send('NIY: Mensaje de error')
-        }
-    }
     try {
-        res.send('NIY: Esta ruta trae todos los usuarios')
+        let response = await getAllUsers()
+        res.status(200).send(response)
     } catch (error) {
-        res.send('NIY: Mensaje de error')
+        res.status(400).send({error: error.message})
     }
 });
 
-usersRouter.get('/:userId', (req, res) => {
+usersRouter.get('/:name', async (req, res) => {
+    let {name} = req.params;
     try {
-        res.send('NIY: Esta ruta trae un usuario por Id')
+        let response = await getDetailUser(name)
+        res.status(200).send(response)
     } catch (error) {
-        res.send('NIY: Mensaje de error')
+        res.status(400).send({error: error.message})
     }
 })
 
-usersRouter.get('/reviews/all', (req, res) => {
+usersRouter.post('/', async (req, res) =>{
+    let {nickname, picture, email} = req.body;
     try {
-        res.send('NIY: Esta ruta trae todos las reviews del ususario')
+        let user = await createUser(nickname, picture, email)
+        res.status(200).send(user)
     } catch (error) {
-        res.send('NIY: Mensaje de error')
+        res.status(400).send({error: error.message})
     }
 })
+
+ usersRouter.put('/:userId', (req, res) => {
+     try {
+         const id = req.params.userId;   // obtiene el Id por params
+         const user = User.find((user) => user.id === id);   // busca en DB un el usuario
+         if (!user) {
+             return res.status(404).send('User not found');  // si no lo encuentra retorna 'User not found
+         }
+
+         user.role = 'admin';    // si encuentra el user, cambia su propiedad rol a 'admin'
+
+         return res.status(200).send(user)   // retorna el usuario
+
+    } catch (error) {
+         return res.status(400).send({error: error.message});
+    }
+ })
+
+usersRouter.put('/updateProfilePic/:name', async (req, res) => {
+    const {name} = req.params;
+    const {picture} = req.body;
+    try {
+        const updatedUser = await updateProfilePic(name, picture);
+        res.status(200).send(updatedUser)
+    } catch (error) {
+        return res.status(400).send({error: error.message});
+    }
+})
+
+usersRouter.post('/login', loginCtrl)
+
+
 
 module.exports = usersRouter;

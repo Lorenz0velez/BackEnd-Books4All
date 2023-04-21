@@ -2,7 +2,7 @@ const { text } = require("express");
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  sequelize.define("Reviews", {
+  sequelize.define('Reviews', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -29,5 +29,9 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-  });
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    }
+  }, { timestamps: false });
 };

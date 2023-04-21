@@ -69,6 +69,7 @@ const getBooks = async () => {
             allGenres.push(genre)
         }
     })
+    console.log("entra a la api");
     return allBooks
 
 }

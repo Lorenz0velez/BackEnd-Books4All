@@ -3,11 +3,14 @@ const { Sequelize } = require('sequelize');
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_DEPLOY } = process.env;
 const BookModel = require('./Models/Book');
 const ReviewsModel = require('./Models/Reviews');
+const UserModel = require('./Models/User');
+const RoleModel = require('./Models/Role');
 
 
 // const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
 //     {
 //         logging: false,
+//         // alter:true,
 //         native: false
 //     }
 // );
@@ -18,14 +21,20 @@ const sequelize = new Sequelize(DB_DEPLOY, {
 
 BookModel(sequelize);
 ReviewsModel(sequelize);
+UserModel(sequelize);
+RoleModel(sequelize);
 
 //Relaciones entidad
 
-const {Book, Reviews} = sequelize.models
+const {Book, Reviews, User, Role} = sequelize.models
 
 Book.hasMany(Reviews);
 Reviews.belongsTo(Book);
 
+User.hasMany(Reviews);
+Reviews.belongsTo(User);
+User.belongsToMany(Role, {through: 'users_roles'});
+Role.belongsToMany(User, {through: 'users_roles'});
 
 module.exports = {
     ...sequelize.models,

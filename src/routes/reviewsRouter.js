@@ -1,6 +1,8 @@
 const { Router } = require('express');
-
 const { getAllReviews, getReviewDetail, createReview } = require('../controllers/reviewsControllers');
+const authorizationMiddleware = require ('../Middlewares/Middlewares');
+const { checkAuth } = require('../Middlewares/auth');
+
 
 const reviewsRouter = Router();
 
@@ -22,12 +24,14 @@ reviewsRouter.get('/:id', async (req, res) => {
     }
 })
 
-reviewsRouter.post('/', async (req, res) => {
+reviewsRouter.post('/', checkAuth, authorizationMiddleware, async (req, res) => {
     const { body, rating, book_id, user_name } = req.body;
     try {
         let response = await createReview(body, rating, book_id, user_name)
         res.status(200).json(response);
     } catch (error) {
+        console.log(error.message)
+        console.log("no esta ingresado el usuario");
         res.status(400).send(error.message)
     }
 })
