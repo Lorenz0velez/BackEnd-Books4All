@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const {
   admin,
 //   guest,
-  customer
+  user,
 } = require("../config");
 const config = require("../config/auth.config");
 const { User } = require("../config/db.config");
@@ -48,17 +48,17 @@ const isAdmin = (req, res, next) => {
   });
 };
 
-const isCustomer = (req, res, next) => {
+const isUser = (req, res, next) => {
   User.findByPk(req.userId).then((user) => {
     user.getRoles().then((roles) => {
       for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === customer) {
+        if (roles[i].name === user) {
           next();
           return;
         }
       }
       res.status(403).send({
-        message: "Require Customer Role!",
+        message: "Require User Role!",
       });
       return;
     });
@@ -69,7 +69,7 @@ const isCustomer = (req, res, next) => {
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
-  isCustomer: isCustomer,
+  isUser: isUser,
 };
 
 module.exports = authJwt;

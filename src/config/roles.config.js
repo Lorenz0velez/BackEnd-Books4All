@@ -1,7 +1,7 @@
 const {
   admin,
   guest, 
-  customer
+  user
 } = require(".");
 
 //trae roles del .env
@@ -9,7 +9,7 @@ const {
 const ROLES = {
   Admin: admin,
   Guest: guest,
-  Customer: customer,
+  User: user,
 };
 
 module.exports = ROLES;
