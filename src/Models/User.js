@@ -13,7 +13,8 @@ module.exports = (sequelize) => {
             allowNull: false
         },
         picture: {
-            type: DataTypes.TEXT
+            type: DataTypes.TEXT,
+            allowNull: true
         },
         email: {
             type: DataTypes.STRING,
@@ -23,5 +24,8 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: true
           }
-    }, { timestamps: false })
+    }, { timestamps: false,
+        save: {
+            fields: ['picture']
+          } })
 }
