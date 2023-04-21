@@ -7,7 +7,8 @@ const getBooksByQuery = async (bookTitle) =>{
         where: {
             title : {
             [Op.like] : `%${bookTitle}%`
-            }
+            },
+            active: true
         }
     })
 

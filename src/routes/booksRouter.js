@@ -2,7 +2,7 @@ const { Router } = require('express');
 const getAllBooks = require('../controllers/getAllBooks');
 const getOneBook = require('../controllers/getOneBook');
 const getBooksByQuery = require('../controllers/getBooksByQuery');
-
+const {putBook, getDeletedBooks} = require('../controllers/putBookController');
 const booksRouter = Router();
 
 

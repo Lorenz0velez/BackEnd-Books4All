@@ -4,6 +4,9 @@ const {Role} = require('../DB_connection')
 
 const getAllUsers = async () =>{
     const users = await User.findAll({
+        where:{
+            active: true
+        },
         include:{
             model:Role,
             attributes: ["name"],
@@ -19,7 +22,8 @@ const getAllUsers = async () =>{
 const getDetailUser = async (id) =>{
     const userDetail = await User.findOne({
         where:{
-            id: id
+            id: id,
+            active: true
         }
     })
     return userDetail
