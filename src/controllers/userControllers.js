@@ -23,6 +23,13 @@ const getDetailUser = async (name) =>{
         where:{
             name: name,
             active: true
+        },
+        include:{
+            model:Role,
+            attributes: ["name"],
+                through: {
+                    attributes: [] 
+            }
         }
     })
     return userDetail
@@ -46,6 +53,23 @@ const createUser = async (nickname, picture, email) =>{
     return user;
 }
 
+const addAdminRole = async (name) => {
+    const user = await User.findOne({
+        where: { name: name }        
+    })
+    const role = await Role.findOne({
+        where:{ name: 'admin' }
+    })
+
+    if (!user) {
+        throw new Error('There is no user does not exists')
+    }
+
+    await user.addRole(role)
+
+    return user;
+}
+
 const updateProfilePic = async (name, newPic) => {
     const user = await User.findOne({
         where: {name : name}
@@ -57,4 +81,4 @@ const updateProfilePic = async (name, newPic) => {
      return {newPicture :user.picture, message:'Profile pic successfully updated'};
   }
   
-module.exports = {getAllUsers, getDetailUser, createUser, updateProfilePic}
+module.exports = {getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole}
