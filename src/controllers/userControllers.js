@@ -1,9 +1,11 @@
-const { log } = require('console')
 const {User} = require('../DB_connection')
 const {Role} = require('../DB_connection')
 
 const getAllUsers = async () =>{
     const users = await User.findAll({
+        where:{
+            active: true
+        },
         include:{
             model:Role,
             attributes: ["name"],
@@ -16,10 +18,18 @@ const getAllUsers = async () =>{
     return users
 }
 
-const getDetailUser = async (id) =>{
+const getDetailUser = async (name) =>{
     const userDetail = await User.findOne({
         where:{
-            id: id
+            name: name,
+            active: true
+        },
+        include:{
+            model:Role,
+            attributes: ["name"],
+                through: {
+                    attributes: [] 
+            }
         }
     })
     return userDetail
@@ -43,5 +53,32 @@ const createUser = async (nickname, picture, email) =>{
     return user;
 }
 
+const addAdminRole = async (name) => {
+    const user = await User.findOne({
+        where: { name: name }        
+    })
+    const role = await Role.findOne({
+        where:{ name: 'admin' }
+    })
 
-module.exports = {getAllUsers, getDetailUser, createUser}
+    if (!user) {
+        throw new Error('There is no user does not exists')
+    }
+
+    await user.addRole(role)
+
+    return user;
+}
+
+const updateProfilePic = async (name, newPic) => {
+    const user = await User.findOne({
+        where: {name : name}
+    })
+     user.picture=newPic;
+
+     user.save();
+     
+     return {newPicture :user.picture, message:'Profile pic successfully updated'};
+  }
+  
+module.exports = {getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole}

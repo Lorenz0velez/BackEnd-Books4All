@@ -24,8 +24,8 @@ reviewsRouter.get('/:id', async (req, res) => {
     }
 })
 
-reviewsRouter.post('/', checkAuth, authorizationMiddleware, async (req, res) => {
-    const { body, rating, book_id, user_name } = req.body;
+reviewsRouter.post('/', authorizationMiddleware, async (req, res) => {
+    const { body, rating, book_id, user_name} = req.body;
     try {
         let response = await createReview(body, rating, book_id, user_name)
         res.status(200).json(response);
