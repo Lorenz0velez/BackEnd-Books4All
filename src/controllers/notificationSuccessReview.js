@@ -5,7 +5,7 @@ const notificationSuccessReview = async (user, newReview, book) => {
     from: '"Books4All"<booksforall.notification@gmail.com>', //.env
     to: `${user.email}`,
     subject: `Review successfully submitted: ${book.dataValues.title}! `,
-    html: `<b> Rating: ${newReview.rating}, <div>  Review: "${newReview.body}.</div>"  </b>`,
+    html: `<b> Rating: </b> ${newReview.rating}, <div>  <b>Review:</b> "${newReview.body}".</div>  `,
   });
 };
 
