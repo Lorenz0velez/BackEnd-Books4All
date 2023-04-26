@@ -2,19 +2,16 @@ const { User, Bought } = require("../DB_connection");
 const { Role } = require("../DB_connection");
 const { notificationNewUser } = require("./notificationNewUser");
 
-const getAllUsers = async () => {
-  const users = await User.findAll({
-    where: {
-      active: true,
-    },
-    include: {
-      model: Role,
-      attributes: ["name"],
-      through: {
-        attributes: [],
-      },
-    },
-  });
+const getAllUsers = async () =>{
+    const users = await User.findAll({
+        include:{
+            model:Role,
+            attributes: ["name"],
+                through: {
+                    attributes: [] 
+            }
+        }
+    })
 
   return users;
 };
@@ -23,7 +20,6 @@ const getDetailUser = async (name) => {
   const userDetail = await User.findOne({
     where: {
       name: name,
-      active: true
     },
     include: [
       {
@@ -86,18 +82,31 @@ const updateProfilePic = async (name, newPic) => {
   });
   user.picture = newPic;
 
-  user.save();
+     user.save();
+     
+     return {newPicture: user.picture, message: "Profile pic successfully updated"};
+  }
 
-  return {
-    newPicture: user.picture,
-    message: "Profile pic successfully updated",
-  };
-};
+const updateUserState = async (name) => {
+    const user = await User.findOne({
+        where: {name : name},
+        include:{
+            model:Role,
+            attributes: ["name"],
+                through: {
+                    attributes: [] 
+            }
+        }
+    })
+    if (user.Roles.at(-1).name === 'admin') {
+        throw new Error('Admins cannot be Blocked')
+    }
+    user.active = !user.active
 
-module.exports = {
-  getAllUsers,
-  getDetailUser,
-  createUser,
-  updateProfilePic,
-  addAdminRole,
-};
+    user.save();
+
+    return {message: `The user ${name} has changed their state active to ${user.active}`}
+}
+  
+module.exports = {getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole, updateUserState}
+
