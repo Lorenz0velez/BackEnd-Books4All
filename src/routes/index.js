@@ -8,7 +8,6 @@ const adminRouter = require('./adminRouter');
 const stripeResponseRouter = require('./stripeResponseRouter');
 const mainRouter = Router();
 
-
 mainRouter.use('/books', booksRouter)
 mainRouter.use('/reviews', reviewsRouter)
 mainRouter.use('/users', usersRouter)

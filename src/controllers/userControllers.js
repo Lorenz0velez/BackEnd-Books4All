@@ -1,4 +1,4 @@
-const { User } = require("../DB_connection");
+const { User, Bought } = require("../DB_connection");
 const { Role } = require("../DB_connection");
 const { notificationNewUser } = require("./notificationNewUser");
 
@@ -13,29 +13,37 @@ const getAllUsers = async () =>{
         }
     })
 
-
   return users;
 };
 
-const getDetailUser = async (name) =>{
-    const userDetail = await User.findOne({
-        where:{
-            name: name,
-        },
-        include:{
-            model:Role,
-            attributes: ["name"],
-                through: {
-                    attributes: [] 
-            }
+const getDetailUser = async (name) => {
+  const userDetail = await User.findOne({
+    where: {
+      name: name,
+    },
+    include: [
+      {
+        model: Role,
+        attributes: ["name"],
+        through: {
+          attributes: []
         }
-    })
-    return userDetail
+      },
+      {
+        model: Bought,
+        attributes: ["books", "userId"]
+      }
+    ]
+  })
+  return userDetail
 }
-
 
 const createUser = async (nickname, picture, email) => {
   if (!email) email = "not specified";
+
+  if (!(await getDetailUser(nickname))) {
+    notificationNewUser(email, nickname);
+  }
 
   const [user, created] = await User.findOrCreate({
     where: { email: email },
@@ -47,7 +55,7 @@ const createUser = async (nickname, picture, email) => {
   });
 
   await user.addRole(role);
-  notificationNewUser(email, user);
+
   return user;
 };
 
