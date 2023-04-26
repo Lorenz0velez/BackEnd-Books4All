@@ -1,4 +1,4 @@
-const { Reviews, Book } = require("../DB_connection");
+const { Reviews, Book, User } = require("../DB_connection");
 const {
   notificationSuccessReview,
 } = require("../controllers/notificationSuccessReview");
@@ -47,6 +47,7 @@ const createReview = async (body, rating, book_id, user_name) => {
     const user_name_test = newReview.user_name;
     const user = await getDetailUser(user_name_test);
     notificationSuccessReview(user, newReview, book);
+    await user.addReviews(newReview)
 
     return newReview;
   } catch (error) {

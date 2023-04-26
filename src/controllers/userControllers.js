@@ -1,16 +1,26 @@
-const { User, Bought } = require("../DB_connection");
-const { Role } = require("../DB_connection");
+const { User, Bought, Role, Reviews } = require("../DB_connection");
+
 const { notificationNewUser } = require("./notificationNewUser");
 
 const getAllUsers = async () =>{
     const users = await User.findAll({
-        include:{
-            model:Role,
-            attributes: ["name"],
-                through: {
-                    attributes: [] 
-            }
-        }
+        include: [
+            {
+              model: Role,
+              attributes: ["name"],
+              through: {
+                attributes: []
+              }
+            },
+            {
+              model: Bought,
+              attributes: ["books", "userId"]
+            },
+            {
+              model: Reviews,
+              attributes: ["book_id", "body", "rating"]
+          }
+          ]
     })
 
   return users;
@@ -32,7 +42,11 @@ const getDetailUser = async (name) => {
       {
         model: Bought,
         attributes: ["books", "userId"]
-      }
+      },
+      {
+        model: Reviews,
+        attributes: ["book_id", "body", "rating"]
+    }
     ]
   })
   return userDetail
