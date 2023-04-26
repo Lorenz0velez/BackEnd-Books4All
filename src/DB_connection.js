@@ -5,7 +5,7 @@ const BookModel = require('./Models/Book');
 const ReviewsModel = require('./Models/Reviews');
 const UserModel = require('./Models/User');
 const RoleModel = require('./Models/Role');
-
+const Boughtmodel = require('./Models/Bought');
 
 const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
     {
@@ -23,10 +23,11 @@ BookModel(sequelize);
 ReviewsModel(sequelize);
 UserModel(sequelize);
 RoleModel(sequelize);
+Boughtmodel(sequelize);
 
 //Relaciones entidad
 
-const {Book, Reviews, User, Role} = sequelize.models
+const {Book, Reviews, User, Role, Bought} = sequelize.models
 
 Book.hasMany(Reviews);
 Reviews.belongsTo(Book);
@@ -35,6 +36,9 @@ User.hasMany(Reviews);
 Reviews.belongsTo(User);
 User.belongsToMany(Role, {through: 'users_roles'});
 Role.belongsToMany(User, {through: 'users_roles'});
+
+User.hasMany(Bought);
+Bought.belongsTo(User);
 
 module.exports = {
     ...sequelize.models,
