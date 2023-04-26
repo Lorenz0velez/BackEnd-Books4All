@@ -39,6 +39,10 @@ const getDetailUser = async (name) => {
 const createUser = async (nickname, picture, email) => {
   if (!email) email = "not specified";
 
+  if (!(await getDetailUser(nickname))) {
+    notificationNewUser(email, nickname);
+  }
+
   const [user, created] = await User.findOrCreate({
     where: { email: email },
     defaults: { name: nickname, picture: picture, email: email },
@@ -49,7 +53,7 @@ const createUser = async (nickname, picture, email) => {
   });
 
   await user.addRole(role);
-  notificationNewUser(email, user);
+
   return user;
 };
 
