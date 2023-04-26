@@ -1,5 +1,6 @@
-const {User} = require('../DB_connection')
-const {Role} = require('../DB_connection')
+const { User } = require("../DB_connection");
+const { Role } = require("../DB_connection");
+const { notificationNewUser } = require("./notificationNewUser");
 
 const getAllUsers = async () =>{
     const users = await User.findAll({
@@ -12,8 +13,9 @@ const getAllUsers = async () =>{
         }
     })
 
-    return users
-}
+
+  return users;
+};
 
 const getDetailUser = async (name) =>{
     const userDetail = await User.findOne({
@@ -31,50 +33,50 @@ const getDetailUser = async (name) =>{
     return userDetail
 }
 
-const createUser = async (nickname, picture, email) =>{
 
-    if(!email) email = 'not specified'
+const createUser = async (nickname, picture, email) => {
+  if (!email) email = "not specified";
 
-    const [user, created ] = await User.findOrCreate({
-        where: { email: email },
-        defaults: { name: nickname, picture: picture, email: email }
-      });
+  const [user, created] = await User.findOrCreate({
+    where: { email: email },
+    defaults: { name: nickname, picture: picture, email: email },
+  });
 
-    const role = await Role.findOne({
-        where:{name: 'user'}
-    })
+  const role = await Role.findOne({
+    where: { name: "user" },
+  });
 
-    await user.addRole(role)
-
-    return user;
-}
+  await user.addRole(role);
+  notificationNewUser(email, user);
+  return user;
+};
 
 const addAdminRole = async (name) => {
-    const user = await User.findOne({
-        where: { name: name }        
-    })
-    const role = await Role.findOne({
-        where:{ name: 'admin' }
-    })
+  const user = await User.findOne({
+    where: { name: name },
+  });
+  const role = await Role.findOne({
+    where: { name: "admin" },
+  });
 
-    if (!user) {
-        throw new Error('There is no user does not exists')
-    }
+  if (!user) {
+    throw new Error("There is no user does not exists");
+  }
 
-    await user.addRole(role)
+  await user.addRole(role);
 
-    return user;
-}
+  return user;
+};
 
 const updateProfilePic = async (name, newPic) => {
-    const user = await User.findOne({
-        where: {name : name}
-    })
-     user.picture=newPic;
+  const user = await User.findOne({
+    where: { name: name },
+  });
+  user.picture = newPic;
 
      user.save();
      
-     return {newPicture :user.picture, message:'Profile pic successfully updated'};
+     return {newPicture: user.picture, message: "Profile pic successfully updated"};
   }
 
 const updateUserState = async (name) => {
@@ -99,3 +101,4 @@ const updateUserState = async (name) => {
 }
   
 module.exports = {getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole, updateUserState}
+
