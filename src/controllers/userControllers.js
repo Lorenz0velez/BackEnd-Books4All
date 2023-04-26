@@ -1,29 +1,109 @@
-const {User} = require('../DB_connection')
-const {Role} = require('../DB_connection')
+const { User, Bought, Role, Reviews } = require("../DB_connection");
+
+const { notificationNewUser } = require("./notificationNewUser");
 
 const getAllUsers = async () =>{
     const users = await User.findAll({
-        where:{
-            active: true
-        },
-        include:{
-            model:Role,
-            attributes: ["name"],
-                through: {
-                    attributes: [] 
-                }
-        }
+        include: [
+            {
+              model: Role,
+              attributes: ["name"],
+              through: {
+                attributes: []
+              }
+            },
+            {
+              model: Bought,
+              attributes: ["books", "userId"]
+            },
+            {
+              model: Reviews,
+              attributes: ["book_id", "body", "rating"]
+          }
+          ]
     })
 
-    return users
+  return users;
+};
+
+const getDetailUser = async (name) => {
+  const userDetail = await User.findOne({
+    where: {
+      name: name,
+    },
+    include: [
+      {
+        model: Role,
+        attributes: ["name"],
+        through: {
+          attributes: []
+        }
+      },
+      {
+        model: Bought,
+        attributes: ["books", "userId"]
+      },
+      {
+        model: Reviews,
+        attributes: ["book_id", "body", "rating"]
+    }
+    ]
+  })
+  return userDetail
 }
 
-const getDetailUser = async (name) =>{
-    const userDetail = await User.findOne({
-        where:{
-            name: name,
-            active: true
-        },
+const createUser = async (nickname, picture, email) => {
+  if (!email) email = "not specified";
+
+  if (!(await getDetailUser(nickname))) {
+    notificationNewUser(email, nickname);
+  }
+
+  const [user, created] = await User.findOrCreate({
+    where: { email: email },
+    defaults: { name: nickname, picture: picture, email: email },
+  });
+
+  const role = await Role.findOne({
+    where: { name: "user" },
+  });
+
+  await user.addRole(role);
+
+  return user;
+};
+
+const addAdminRole = async (name) => {
+  const user = await User.findOne({
+    where: { name: name },
+  });
+  const role = await Role.findOne({
+    where: { name: "admin" },
+  });
+
+  if (!user) {
+    throw new Error("There is no user does not exists");
+  }
+
+  await user.addRole(role);
+
+  return user;
+};
+
+const updateProfilePic = async (name, newPic) => {
+  const user = await User.findOne({
+    where: { name: name },
+  });
+  user.picture = newPic;
+
+     user.save();
+     
+     return {newPicture: user.picture, message: "Profile pic successfully updated"};
+  }
+
+const updateUserState = async (name) => {
+    const user = await User.findOne({
+        where: {name : name},
         include:{
             model:Role,
             attributes: ["name"],
@@ -32,53 +112,15 @@ const getDetailUser = async (name) =>{
             }
         }
     })
-    return userDetail
-}
-
-const createUser = async (nickname, picture, email) =>{
-
-    if(!email) email = 'not specified'
-
-    const [user, created ] = await User.findOrCreate({
-        where: { email: email },
-        defaults: { name: nickname, picture: picture, email: email }
-      });
-
-    const role = await Role.findOne({
-        where:{name: 'user'}
-    })
-
-    await user.addRole(role)
-
-    return user;
-}
-
-const addAdminRole = async (name) => {
-    const user = await User.findOne({
-        where: { name: name }        
-    })
-    const role = await Role.findOne({
-        where:{ name: 'admin' }
-    })
-
-    if (!user) {
-        throw new Error('There is no user does not exists')
+    if (user.Roles.at(-1).name === 'admin') {
+        throw new Error('Admins cannot be Blocked')
     }
+    user.active = !user.active
 
-    await user.addRole(role)
+    user.save();
 
-    return user;
+    return {message: `The user ${name} has changed their state active to ${user.active}`}
 }
-
-const updateProfilePic = async (name, newPic) => {
-    const user = await User.findOne({
-        where: {name : name}
-    })
-     user.picture=newPic;
-
-     user.save();
-     
-     return {newPicture :user.picture, message:'Profile pic successfully updated'};
-  }
   
-module.exports = {getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole}
+module.exports = {getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole, updateUserState}
+
