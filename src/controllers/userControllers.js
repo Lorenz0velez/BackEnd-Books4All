@@ -1,20 +1,27 @@
-const { User } = require("../DB_connection");
-const { Role } = require("../DB_connection");
+const { User, Bought, Role, Reviews } = require("../DB_connection");
+
 const { notificationNewUser } = require("./notificationNewUser");
 
-const getAllUsers = async () => {
-  const users = await User.findAll({
-    where: {
-      active: true,
-    },
-    include: {
-      model: Role,
-      attributes: ["name"],
-      through: {
-        attributes: [],
-      },
-    },
-  });
+const getAllUsers = async () =>{
+    const users = await User.findAll({
+        include: [
+            {
+              model: Role,
+              attributes: ["name"],
+              through: {
+                attributes: []
+              }
+            },
+            {
+              model: Bought,
+              attributes: ["books", "userId"]
+            },
+            {
+              model: Reviews,
+              attributes: ["book_id", "body", "rating"]
+          }
+          ]
+    })
 
   return users;
 };
@@ -23,21 +30,34 @@ const getDetailUser = async (name) => {
   const userDetail = await User.findOne({
     where: {
       name: name,
-      active: true,
     },
-    include: {
-      model: Role,
-      attributes: ["name"],
-      through: {
-        attributes: [],
+    include: [
+      {
+        model: Role,
+        attributes: ["name"],
+        through: {
+          attributes: []
+        }
       },
-    },
-  });
-  return userDetail;
-};
+      {
+        model: Bought,
+        attributes: ["books", "userId"]
+      },
+      {
+        model: Reviews,
+        attributes: ["book_id", "body", "rating"]
+    }
+    ]
+  })
+  return userDetail
+}
 
 const createUser = async (nickname, picture, email) => {
   if (!email) email = "not specified";
+
+  if (!(await getDetailUser(nickname))) {
+    notificationNewUser(email, nickname);
+  }
 
   const [user, created] = await User.findOrCreate({
     where: { email: email },
@@ -49,7 +69,7 @@ const createUser = async (nickname, picture, email) => {
   });
 
   await user.addRole(role);
-  notificationNewUser(email, user);
+
   return user;
 };
 
@@ -76,18 +96,31 @@ const updateProfilePic = async (name, newPic) => {
   });
   user.picture = newPic;
 
-  user.save();
+     user.save();
+     
+     return {newPicture: user.picture, message: "Profile pic successfully updated"};
+  }
 
-  return {
-    newPicture: user.picture,
-    message: "Profile pic successfully updated",
-  };
-};
+const updateUserState = async (name) => {
+    const user = await User.findOne({
+        where: {name : name},
+        include:{
+            model:Role,
+            attributes: ["name"],
+                through: {
+                    attributes: [] 
+            }
+        }
+    })
+    if (user.Roles.at(-1).name === 'admin') {
+        throw new Error('Admins cannot be Blocked')
+    }
+    user.active = !user.active
 
-module.exports = {
-  getAllUsers,
-  getDetailUser,
-  createUser,
-  updateProfilePic,
-  addAdminRole,
-};
+    user.save();
+
+    return {message: `The user ${name} has changed their state active to ${user.active}`}
+}
+  
+module.exports = {getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole, updateUserState}
+
