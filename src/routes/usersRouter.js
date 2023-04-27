@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const { User } = require('../DB_connection')
-const { getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole} = require('../controllers/userControllers');
+const { getAllUsers, getDetailUser, createUser, updateProfile, addAdminRole} = require('../controllers/userControllers');
 const { loginCtrl, registerCtrl } = require('../controllers/auth');
 
 
@@ -46,11 +46,11 @@ usersRouter.put('/admin', async (req, res) => {
     }
 })
 
-usersRouter.put('/updateProfilePic/:name', async (req, res) => {
+usersRouter.put('/updateProfile/:name', async (req, res) => {
     const {name} = req.params;
-    const {picture} = req.body;
+    const {picture, email, alterName, about} = req.body;
     try {
-        const updatedUser = await updateProfilePic(name, picture);
+        const updatedUser = await updateProfile(name, picture, email, alterName, about);
         res.status(200).send(updatedUser)
     } catch (error) {
         return res.status(400).send({error: error.message});

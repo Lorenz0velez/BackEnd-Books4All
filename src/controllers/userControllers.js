@@ -40,7 +40,7 @@ const createUser = async (nickname, picture, email) =>{
     if(!email) email = 'not specified'
 
     const [user, created ] = await User.findOrCreate({
-        where: { email: email },
+        where: { name: nickname },
         defaults: { name: nickname, picture: picture, email: email }
       });
 
@@ -70,15 +70,19 @@ const addAdminRole = async (name) => {
     return user;
 }
 
-const updateProfilePic = async (name, newPic) => {
+const updateProfile = async (name, picture, email, alterName, about) => {
     const user = await User.findOne({
         where: {name : name}
     })
-     user.picture=newPic;
+
+    if(alterName)user.alterName = alterName;
+    if(picture) user.picture = picture;
+    if(email)user.email = email;
+    if(about)user.about = about;
 
      user.save();
      
-     return {newPicture :user.picture, message:'Profile pic successfully updated'};
+     return {updatedUser: user, message:'Profile successfully updated'};
   }
   
-module.exports = {getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole}
+module.exports = {getAllUsers, getDetailUser, createUser, updateProfile, addAdminRole}
