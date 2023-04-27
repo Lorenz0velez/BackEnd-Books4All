@@ -1,4 +1,4 @@
-const { User, Bought, Role, Reviews } = require("../DB_connection");
+const { User, Bought, Role, Reviews, Book } = require("../DB_connection");
 
 const { notificationNewUser } = require("./notificationNewUser");
 
@@ -46,6 +46,13 @@ const getDetailUser = async (name) => {
       {
         model: Reviews,
         attributes: ["book_id", "body", "rating"]
+    },
+    {
+      model: Book,
+      attributes: ["title"],
+        through: {
+          attributes: []
+        }
     }
     ]
   })
@@ -68,6 +75,20 @@ const createUser = async (nickname, picture, email) =>{
   await user.addRole(role)
 
   return user;
+}
+const createFavorite = async (name, book_id) => {
+  let user = await User.findOne({where:{name: name}})
+  let book = await Book.findByPk(book_id)
+ 
+  await user.addBook(book)
+  return "favorito agregado"
+}
+const removeFavorite = async (name, book_id) => {
+  let user = await User.findOne({where:{name: name}})
+  let book = await Book.findByPk(book_id)
+ 
+  await user.removeBook(book)
+  return "favorito eliminado"
 }
 
 const addAdminRole = async (name) => {
@@ -123,5 +144,5 @@ const updateUserState = async (name) => {
   return {message: `The user ${name} has changed their state active to ${user.active}`}
 }
  
-module.exports = {getAllUsers, getDetailUser, createUser, updateProfile, addAdminRole, updateUserState}
+module.exports = {getAllUsers, getDetailUser, createUser, updateProfile, addAdminRole, updateUserState, createFavorite, removeFavorite}
 
