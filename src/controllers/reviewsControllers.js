@@ -1,52 +1,59 @@
-const { Reviews, Book } = require('../DB_connection');
+const { Reviews, Book, User } = require("../DB_connection");
+const {
+  notificationSuccessReview,
+} = require("../controllers/notificationSuccessReview");
+const { getDetailUser } = require("./userControllers");
+
 const getAllReviews = async () => {
-    const dbReviews = await Reviews.findAll({
-        where:{
-            active: true
-        },
-        include: {
-            model: Book
-        }
-    })
-    return dbReviews;
-}
+  const dbReviews = await Reviews.findAll({
+    where: {
+      active: true,
+    },
+    include: {
+      model: Book,
+    },
+  });
+  return dbReviews;
+};
 
 const getReviewDetail = async (id) => {
-     const reviewDetail = await Reviews.findOne({
-        where: {
-            id: id,
-            active: true
-        }, 
-        include: {
-             model: Book
-         }
-     })
-     return reviewDetail
-}
-
+  const reviewDetail = await Reviews.findOne({
+    where: {
+      id: id,
+      active: true,
+    },
+    include: {
+      model: Book,
+    },
+  });
+  return reviewDetail;
+};
 
 const createReview = async (body, rating, book_id, user_name) => {
-    try {
-
-        const book = await Book.findByPk(book_id);
-        if (!book) {
-            throw new Error("No se encontró el libro");
-        }
-
-
-        const newReview = await Reviews.create({
-            body,
-            rating,
-            book_id,
-            user_name
-        });
-
-
-        await book.addReviews(newReview);
-
-        return newReview;
-    } catch (error) {
-        throw new Error(error.message);
+  try {
+    const book = await Book.findByPk(book_id);
+    if (!book) {
+      throw new Error("No se encontró el libro");
     }
+
+    const newReview = await Reviews.create({
+      body,
+      rating,
+      book_id,
+      user_name,
+    });
+
+    await book.addReviews(newReview);
+    const user_name_test = newReview.user_name;
+    const user = await getDetailUser(user_name_test);
+    if (user.email !== "not specified" || !user.email) {
+      notificationSuccessReview(user, newReview, book);
+    }
+    await user.addReviews(newReview)
+
+    return newReview;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
-module.exports = { createReview, getAllReviews, getReviewDetail }
+module.exports = { createReview, getAllReviews, getReviewDetail };

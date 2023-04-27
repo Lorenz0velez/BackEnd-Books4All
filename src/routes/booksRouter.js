@@ -2,7 +2,7 @@ const { Router } = require('express');
 const getAllBooks = require('../controllers/getAllBooks');
 const getOneBook = require('../controllers/getOneBook');
 const getBooksByQuery = require('../controllers/getBooksByQuery');
-const {putBook, getDeletedBooks} = require('../controllers/putBookController');
+const {getDeletedBooks} = require('../controllers/putBookController');
 const booksRouter = Router();
 
 
@@ -25,6 +25,15 @@ booksRouter.get('/', async (req, res) => {
         return res.status(400).json({error:error.message})
     } 
 });
+
+booksRouter.get('/blocked', async (req, res) => {
+    try {
+        const banBooks = await getDeletedBooks()
+        return res.status(200).send(banBooks)
+    } catch (error) {
+        return res.status(400).send({error: error.message})
+    }
+})
 
 booksRouter.get('/:bookId', async (req, res) => {
 
