@@ -5,7 +5,7 @@ async function createBought(user, booksToBuyArray) {
   if (!userRecord) {
     throw new Error('Usuario no encontrado');
   }
-  
+
   const books = await Book.findAll({
     where: { id: booksToBuyArray.map(b => b.bookId) }, // Filtrar los libros por bookId
   });
@@ -29,14 +29,16 @@ async function createBought(user, booksToBuyArray) {
       subtotal: book.price * b.quantity,
     };
   });
-
+  const total = boughtBooks.reduce((acc, book) => acc + book.subtotal, 0);
   const bought = await Bought.create({
     books: boughtBooks,
     userId: userRecord.id,
+    total: total
   });
+
 
   await userRecord.addBought(bought);
 
-console.log("todo bien todo bien");
+  console.log("todo bien todo bien");
 }
 module.exports = { createBought }
