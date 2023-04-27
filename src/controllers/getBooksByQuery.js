@@ -1,12 +1,15 @@
 const { Book } = require("../DB_connection");
 const {Op} = require ('sequelize')
 const getBooksByQuery = async (bookTitle) =>{
-    bookTitle = bookTitle.charAt(0).toUpperCase() + bookTitle.slice(1).toLowerCase();
-    
+    let search = bookTitle.split(" ")
+    for (let i = 0; i < search.length; i++) {
+        search[i] = search[i][0].toUpperCase() + search[i].substr(1);
+    }
+    let searchBook = search.join(" ");
     const books = await Book.findAll({
         where: {
             title : {
-            [Op.like] : `%${bookTitle}%`
+            [Op.like] : `%${searchBook}%`
             },
             active: true
         }
