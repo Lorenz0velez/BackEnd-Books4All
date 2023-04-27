@@ -25,8 +25,6 @@ apiRouter.post("/create-checkout-session", async (req, res) => {
     },
   });
 
-  console.log(req.body);
-
   const line_items = req.body.cart.map((el) => {
     if (!el.image) {
       el.image =

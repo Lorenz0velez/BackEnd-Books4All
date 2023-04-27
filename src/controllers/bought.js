@@ -1,18 +1,17 @@
-const { Bought, User, Book } = require('../DB_connection');
+const { Bought, User, Book } = require("../DB_connection");
 
 async function createBought(user, booksToBuyArray) {
   const userRecord = await User.findByPk(user);
   if (!userRecord) {
-    throw new Error('Usuario no encontrado');
+    throw new Error("Usuario no encontrado");
   }
-  
-  const books = await Book.findAll({
-    where: { id: booksToBuyArray.map(b => b.bookId) }, // Filtrar los libros por bookId
-  });
-  console.log(books);
 
-  const boughtBooks = booksToBuyArray.map(b => {
-    const book = books.find(x => x.id === b.bookId);
+  const books = await Book.findAll({
+    where: { id: booksToBuyArray.map((b) => b.bookId) }, // Filtrar los libros por bookId
+  });
+
+  const boughtBooks = booksToBuyArray.map((b) => {
+    const book = books.find((x) => x.id === b.bookId);
 
     if (!book) {
       throw new Error(`Libro con id ${b.bookId} no encontrado`);
@@ -36,7 +35,5 @@ async function createBought(user, booksToBuyArray) {
   });
 
   await userRecord.addBought(bought);
-
-console.log("todo bien todo bien");
 }
-module.exports = { createBought }
+module.exports = { createBought };
