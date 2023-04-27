@@ -6,6 +6,7 @@ const Stripe = require("stripe");
 const { createBought } = require("../controllers/bought");
 const stripe = Stripe(process.env.STRIPE_KEY);
 // const stripe = Stripe(process.env.STRIPE_KEY)
+const getOneBook = require("../controllers/getOneBook");
 
 apiRouter.post("/create-checkout-session", async (req, res) => {
   let carrito = req.body.cart.map((book) => {
