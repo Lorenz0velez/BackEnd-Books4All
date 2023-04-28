@@ -17,10 +17,10 @@ module.exports = (sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            total: {
-                type: DataTypes.FLOAT,
-                allowNull: false
-            }
+            // total: {
+            //     type: DataTypes.FLOAT,
+            //     allowNull: false
+            // }
 
         })
 }
