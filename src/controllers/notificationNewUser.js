@@ -38,6 +38,7 @@ const notificationNewUser = async (email, user) => {
           justify-content: space-between;
         }
         
+        
         img {
           height: 50px;
         }
@@ -45,15 +46,16 @@ const notificationNewUser = async (email, user) => {
         h1 {
           font-size: 24px;
           margin: 0;
+          color: white;
         }
       </style>
     </head>
     <body>
       <header>
         <img src="https://cdn.discordapp.com/attachments/1091730813529374777/1098218919065559060/books4all.png" alt="Logo de Books4All">
-        <h1>Bienvenido a Books4All!</h1>
+        <h1>Welcome to Books4All!</h1>
       </header>
-      <h3>El usuario ${user} ha sido creado exitosamente.</h3>
+      <h3>The user ${user} has been successfully created</h3>
       <br><br>
       <footer className="bg-dark">
         <div className="container-fluid">

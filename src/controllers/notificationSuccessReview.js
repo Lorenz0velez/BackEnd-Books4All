@@ -37,32 +37,35 @@ const notificationSuccessReview = async (user, newReview, book) => {
           padding: 20px;
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justify-content: center;
         }
         
         img {
           height: 50px;
         }
-        
+           
         h1 {
           font-size: 24px;
           margin: 0;
+          color: white;
         }
+     
       </style>
     </head>
     <body>
       <header>
         <img src="https://cdn.discordapp.com/attachments/1091730813529374777/1098218919065559060/books4all.png" alt="Logo de Books4All">
-        <h1>Tu reseña ha sido publicada!</h1>
+        <h1>Your review has been published!</h1>
       </header>
-      <h3><b>Calificación:</b> ${newReview.rating}</h3>
-      <h3><b>Reseña:</b> "${newReview.body}"</h3>
+      <div>
+      <h3><b>Rating:</b> ${newReview.rating}</h3>
+      <h3><b>Review:</b> "${newReview.body}"</h3>
       <br><br>
+      </div>  
       <footer className="bg-dark">
         <div className="container-fluid">
             <div className="row border-top justify-content-between p-3">
                 <div className="col-sm p-0">
-                <Link to="/about" className="text-light text-decoration-none">About us</Link>
                 </div>
                 <div className="col-sm d-flex flex-row-reverse">
                 <a href="https://books4-all-front.vercel.app/" className="text-light align-items-end">©Books4all</a>
