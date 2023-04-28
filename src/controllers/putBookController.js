@@ -31,4 +31,20 @@ const updateBookState = async (title) => {
   
 }
 
-module.exports = {putBook, getDeletedBooks, updateBookState};
+const updateBookInfo = async (bookId, title, authors, categories, price, stock, description) => {
+  const book = await Book.findByPk(bookId);
+  book.set({
+    id: bookId,
+    title: title,
+    authors: [authors],
+    categories: [categories],
+    price: price,
+    stock: parseInt(stock),
+    description: description
+  });
+
+  await book.save()
+  return {message: 'Book modified successfully'};
+}
+
+module.exports = {putBook, getDeletedBooks, updateBookState, updateBookInfo};
