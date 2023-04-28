@@ -1,4 +1,4 @@
-const { User, Bought, Role, Reviews } = require("../DB_connection");
+const { User, Bought, Role, Reviews, Book } = require("../DB_connection");
 
 const { notificationNewUser } = require("./notificationNewUser");
 
@@ -46,32 +46,50 @@ const getDetailUser = async (name) => {
       {
         model: Reviews,
         attributes: ["book_id", "body", "rating"]
+    },
+    {
+      model: Book,
+      attributes: ["title"],
+        through: {
+          attributes: []
+        }
     }
     ]
   })
   return userDetail
 }
 
-const createUser = async (nickname, picture, email) => {
-  if (!email) email = "not specified";
+const createUser = async (nickname, picture, email) =>{
 
-  if (!(await getDetailUser(nickname))) {
-    notificationNewUser(email, nickname);
-  }
+  if(!email) email = 'not specified'
 
-  const [user, created] = await User.findOrCreate({
-    where: { email: email },
-    defaults: { name: nickname, picture: picture, email: email },
-  });
+  const [user, created ] = await User.findOrCreate({
+      where: { name: nickname },
+      defaults: { name: nickname, picture: picture, email: email }
+    });
 
   const role = await Role.findOne({
-    where: { name: "user" },
-  });
+      where:{name: 'user'}
+  })
 
-  await user.addRole(role);
+  await user.addRole(role)
 
   return user;
-};
+}
+const createFavorite = async (name, book_id) => {
+  let user = await User.findOne({where:{name: name}})
+  let book = await Book.findByPk(book_id)
+ 
+  await user.addBook(book)
+  return "favorito agregado"
+}
+const removeFavorite = async (name, book_id) => {
+  let user = await User.findOne({where:{name: name}})
+  let book = await Book.findByPk(book_id)
+ 
+  await user.removeBook(book)
+  return "favorito eliminado"
+}
 
 const addAdminRole = async (name) => {
   const user = await User.findOne({
@@ -90,37 +108,41 @@ const addAdminRole = async (name) => {
   return user;
 };
 
-const updateProfilePic = async (name, newPic) => {
+const updateProfile = async (name, picture, email, alterName, about) => {
   const user = await User.findOne({
-    where: { name: name },
-  });
-  user.picture = newPic;
+      where: {name : name}
+  })
 
-     user.save();
-     
-     return {newPicture: user.picture, message: "Profile pic successfully updated"};
-  }
+  if(alterName)user.alterName = alterName;
+  if(picture) user.picture = picture;
+  if(email)user.email = email;
+  if(about)user.about = about;
+
+   user.save();
+   
+   return {updatedUser: user, message:'Profile successfully updated'};
+}
 
 const updateUserState = async (name) => {
-    const user = await User.findOne({
-        where: {name : name},
-        include:{
-            model:Role,
-            attributes: ["name"],
-                through: {
-                    attributes: [] 
-            }
-        }
-    })
-    if (user.Roles.at(-1).name === 'admin') {
-        throw new Error('Admins cannot be Blocked')
-    }
-    user.active = !user.active
+  const user = await User.findOne({
+      where: {name : name},
+      include:{
+          model:Role,
+          attributes: ["name"],
+              through: {
+                  attributes: [] 
+          }
+      }
+  })
+  if (user.Roles.at(-1).name === 'admin') {
+      throw new Error('Admins cannot be Blocked')
+  }
+  user.active = !user.active
 
-    user.save();
+  user.save();
 
-    return {message: `The user ${name} has changed their state active to ${user.active}`}
+  return {message: `The user ${name} has changed their state active to ${user.active}`}
 }
-  
-module.exports = {getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole, updateUserState}
+ 
+module.exports = {getAllUsers, getDetailUser, createUser, updateProfile, addAdminRole, updateUserState, createFavorite, removeFavorite}
 
