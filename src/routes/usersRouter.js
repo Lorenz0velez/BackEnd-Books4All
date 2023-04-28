@@ -1,9 +1,7 @@
 const {Router} = require('express');
 const { User } = require('../DB_connection')
-const { getAllUsers, getDetailUser, createUser, updateProfile, addAdminRole, createFavorite, removeFavorite} = require('../controllers/userControllers');
-const { loginCtrl, registerCtrl } = require('../controllers/auth');
 
-
+const { getAllUsers, getDetailUser, createUser, updateProfilePic, updateProfile, addAdminRole, createFavorite, removeFavorite} = require('../controllers/userControllers');
 
 const usersRouter = Router ();
 
