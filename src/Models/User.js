@@ -12,9 +12,17 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        alterName: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         picture: {
             type: DataTypes.TEXT,
             allowNull: true
+        },
+        about: {
+            type: DataTypes.TEXT,
+            allowNull: true,
         },
         email: {
             type: DataTypes.STRING,
@@ -26,6 +34,6 @@ module.exports = (sequelize) => {
           }
     }, { timestamps: false,
         save: {
-            fields: ['picture']
+            fields: ['picture', 'about', 'alterName', 'email']
           } })
 }

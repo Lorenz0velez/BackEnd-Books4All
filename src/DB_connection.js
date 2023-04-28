@@ -36,6 +36,9 @@ Reviews.belongsTo(User);
 User.belongsToMany(Role, {through: 'users_roles'});
 Role.belongsToMany(User, {through: 'users_roles'});
 
+User.belongsToMany(Book, {through: 'books_users'});
+Book.belongsToMany(User, {through: 'books_users'});
+
 User.hasMany(Bought);
 Bought.belongsTo(User);
 

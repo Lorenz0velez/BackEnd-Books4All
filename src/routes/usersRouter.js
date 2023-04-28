@@ -1,9 +1,7 @@
 const {Router} = require('express');
 const { User } = require('../DB_connection')
-const { getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole} = require('../controllers/userControllers');
-const { loginCtrl, registerCtrl } = require('../controllers/auth');
 
-
+const { getAllUsers, getDetailUser, createUser, updateProfilePic, updateProfile, addAdminRole, createFavorite, removeFavorite} = require('../controllers/userControllers');
 
 const usersRouter = Router ();
 
@@ -35,6 +33,25 @@ usersRouter.post('/', async (req, res) =>{
         res.status(400).send({error: error.message})
     }
 })
+usersRouter.post('/addfavorite', async (req, res) => {
+    let {name, book_id} = req.body;
+    try {
+        let response = await createFavorite(name, book_id)
+        res.status(200).send(response)
+    } catch (error) {
+        console.log(error.message)
+        res.status(400).send({error: error.message})
+    }
+})
+usersRouter.post('/removefavorite', async (req, res) => {
+    let {name, book_id} = req.body;
+    try {
+        let response = await removeFavorite(name, book_id)
+        res.status(200).send(response)
+    } catch (error) {
+        res.status(400).send({error: error.message})
+    }
+})
 
 usersRouter.put('/admin', async (req, res) => {
     let { name } = req.body;
@@ -46,11 +63,11 @@ usersRouter.put('/admin', async (req, res) => {
     }
 })
 
-usersRouter.put('/updateProfilePic/:name', async (req, res) => {
+usersRouter.put('/updateProfile/:name', async (req, res) => {
     const {name} = req.params;
-    const {picture} = req.body;
+    const {picture, email, alterName, about} = req.body;
     try {
-        const updatedUser = await updateProfilePic(name, picture);
+        const updatedUser = await updateProfile(name, picture, email, alterName, about);
         res.status(200).send(updatedUser)
     } catch (error) {
         return res.status(400).send({error: error.message});

@@ -56,4 +56,15 @@ const createReview = async (body, rating, book_id, user_name) => {
     throw new Error(error.message);
   }
 };
-module.exports = { createReview, getAllReviews, getReviewDetail };
+
+const deleteReview = async (id) => {
+  const review = await Reviews.findByPk(id)
+  if (!review) {
+    throw new Error('This review does not exist');
+  }
+  review.active = !review.active
+  await review.save({ fields: ['active']})
+  return {message: `This review is now ${review.active === true ? 'active' : 'disabled'}`}
+}
+
+module.exports = { createReview, getAllReviews, getReviewDetail, deleteReview };
