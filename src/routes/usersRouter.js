@@ -1,9 +1,6 @@
 const {Router} = require('express');
 const { User } = require('../DB_connection')
 const { getAllUsers, getDetailUser, createUser, updateProfilePic, addAdminRole} = require('../controllers/userControllers');
-const { loginCtrl, registerCtrl } = require('../controllers/auth');
-
-
 
 const usersRouter = Router ();
 
