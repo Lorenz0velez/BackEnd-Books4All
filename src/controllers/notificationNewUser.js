@@ -54,6 +54,18 @@ const notificationNewUser = async (email, user) => {
         <h1>Bienvenido a Books4All!</h1>
       </header>
       <h3>El usuario ${user} ha sido creado exitosamente.</h3>
+      <br><br>
+      <footer className="bg-dark">
+        <div className="container-fluid">
+            <div className="row border-top justify-content-between p-3">
+                <div className="col-sm p-0">
+                </div>
+                <div className="col-sm d-flex flex-row-reverse">
+                <a href="https://books4-all-front.vercel.app/" className="text-light align-items-end">©Books4all</a>
+                </div>
+            </div>
+        </div>
+    </footer>
     </body>
   </html>
     `,
