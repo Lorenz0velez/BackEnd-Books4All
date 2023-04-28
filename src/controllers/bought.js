@@ -32,7 +32,7 @@ async function createBought(user, booksToBuyArray) {
   const bought = await Bought.create({
     books: boughtBooks,
     userId: userRecord.id,
-    total: total
+  
   });
 
 

@@ -14,7 +14,7 @@ const getAllUsers = async () => {
       },
       {
         model: Bought,
-        attributes: ["id", "books", "userId", "total", "createdAt"]
+        attributes: ["id", "books", "userId",  "createdAt"]
       },
       {
         model: Reviews,
@@ -41,8 +41,7 @@ const getDetailUser = async (name) => {
       },
       {
         model: Bought,
-        attributes: ["id", "books", "userId", "total", "createdAt"]
-
+        attributes: ["id", "books", "userId",  "createdAt"]
       },
       {
         model: Reviews,
