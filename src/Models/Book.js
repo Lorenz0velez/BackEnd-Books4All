@@ -29,7 +29,7 @@ module.exports = (sequelize) => {
         type: DataTypes.TEXT,
       },
       date: {
-        type: DataTypes.DATE,
+        type: DataTypes.TEXT,
       },
       image: {
         type: DataTypes.STRING,
