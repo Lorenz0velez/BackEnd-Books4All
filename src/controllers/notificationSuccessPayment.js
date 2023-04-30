@@ -75,7 +75,7 @@ const notificationSuccessPayment = async (user, eachBookDB, quantitys) => {
             <h3><b>Subtotal:</b> USD${prices[i] * quantitys[i]} </h3>
           </div>
           <div>
-            <b>Item:</b> ${i + 1}
+            <b>Item:</b> ${total.push(prices[i] * quantitys[i])} 
           </div>
         </div>
       </div>
