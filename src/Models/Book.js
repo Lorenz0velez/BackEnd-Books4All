@@ -5,10 +5,10 @@ module.exports = (sequelize) => {
     "Book",
     {
       id: {
-        type: DataTypes.UUID,
+        type: DataTypes.TEXT, // "id": "GLQvEAAAQBAJ",
+        allowNull: false,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
-        allowNull: false
+        defaultValue: Math.floor((Math.random() * 1000)) + Date.now().toString()
       },
       title: {
         type: DataTypes.STRING,
