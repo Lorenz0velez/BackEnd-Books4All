@@ -5,9 +5,10 @@ module.exports = (sequelize) => {
     "Book",
     {
       id: {
-        type: DataTypes.TEXT, // "id": "GLQvEAAAQBAJ",
-        allowNull: false,
+        type: DataTypes.UUID,
         primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false
       },
       title: {
         type: DataTypes.STRING,
@@ -24,6 +25,8 @@ module.exports = (sequelize) => {
       },
       stock: {
         type: DataTypes.INTEGER,
+        allowNul: false,
+        defaultValue: 30
       },
       description: {
         type: DataTypes.TEXT,

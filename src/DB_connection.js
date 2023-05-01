@@ -7,7 +7,7 @@ const UserModel = require('./Models/User');
 const RoleModel = require('./Models/Role');
 const Boughtmodel = require('./Models/Bought');
 
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
     {
         logging: false,
         native: false
