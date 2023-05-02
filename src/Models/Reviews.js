@@ -25,6 +25,9 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    user_avatar: {
+      type: DataTypes.STRING,
+    },
     book_id: {
       type: DataTypes.STRING,
       allowNull: false,
