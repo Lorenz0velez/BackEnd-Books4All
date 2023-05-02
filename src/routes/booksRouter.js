@@ -3,6 +3,7 @@ const getAllBooks = require('../controllers/getAllBooks');
 const getOneBook = require('../controllers/getOneBook');
 const getBooksByQuery = require('../controllers/getBooksByQuery');
 const {getDeletedBooks} = require('../controllers/putBookController');
+const { adminCreateBook } = require('../controllers/adminCreateBook');
 const booksRouter = Router();
 
 
@@ -44,6 +45,23 @@ booksRouter.get('/:bookId', async (req, res) => {
         res.status(200).json(book);
     } catch (error) {
         return res.status(400).json({error:error.message})
+    }
+})
+
+booksRouter.post('/createBook', async (req, res)=>{
+    const {title, authors, categories, price, description, image, stock} = req.body;
+
+    if (!title || !authors || !categories || !price || !description || !image){ 
+    return res.status(404).send({msg: 'Required data is missing'})
+    }
+
+    try {
+        const newBook = await adminCreateBook(title, authors, categories, price, description, image, stock)
+        res.status(200).send(newBook)
+    } catch (error) {
+        console.log(error)
+        console.log("no se creo correctamente el libro");
+        res.status(400).send(error.message)
     }
 })
 

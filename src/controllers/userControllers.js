@@ -49,7 +49,7 @@ const getDetailUser = async (name) => {
       },
       {
         model: Book,
-        attributes: ["title"],
+        attributes: ["title", "image", "id", "categories"],
         through: {
           attributes: [],
         },
@@ -153,6 +153,10 @@ const updateUserState = async (name) => {
     message: `The user ${name} has changed their state active to ${user.active}`,
   };
 };
+
+
+
+
 
 module.exports = {
   getAllUsers,
