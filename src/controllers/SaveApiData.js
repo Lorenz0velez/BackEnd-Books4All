@@ -48,7 +48,7 @@ const getBooks = async () => {
         description: book.volumeInfo.description,
         categories: book.volumeInfo.categories,
         image: book.volumeInfo.imageLinks?.smallThumbnail,
-        price: randoPrice,
+        price: parseInt(randoPrice),
         stock: 30,
         date: book.volumeInfo.publishedDate,
       };

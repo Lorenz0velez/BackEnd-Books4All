@@ -8,6 +8,7 @@ module.exports = (sequelize) => {
         type: DataTypes.TEXT, // "id": "GLQvEAAAQBAJ",
         allowNull: false,
         primaryKey: true,
+        defaultValue: Math.floor((Math.random() * 1000)) + Date.now().toString()
       },
       title: {
         type: DataTypes.STRING,
@@ -24,6 +25,8 @@ module.exports = (sequelize) => {
       },
       stock: {
         type: DataTypes.INTEGER,
+        allowNul: false,
+        defaultValue: 30
       },
       description: {
         type: DataTypes.TEXT,

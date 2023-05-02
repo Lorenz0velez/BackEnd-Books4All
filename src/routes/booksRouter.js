@@ -49,16 +49,15 @@ booksRouter.get('/:bookId', async (req, res) => {
 })
 
 booksRouter.post('/createBook', async (req, res)=>{
-    const {id, title, authors, categories, price, description, image} = req.body;
+    const {title, authors, categories, price, description, image, stock} = req.body;
 
-    if ( !id || !title || !authors || !categories || !price || !description || !image){ 
+    if (!title || !authors || !categories || !price || !description || !image){ 
     return res.status(404).send({msg: 'Required data is missing'})
     }
 
     try {
-        const newBook = await adminCreateBook(id, title, authors, categories, price, description, image)
-       console.log(newBook);
-        res.status(200).json(newBook)
+        const newBook = await adminCreateBook(title, authors, categories, price, description, image, stock)
+        res.status(200).send(newBook)
     } catch (error) {
         console.log(error)
         console.log("no se creo correctamente el libro");
