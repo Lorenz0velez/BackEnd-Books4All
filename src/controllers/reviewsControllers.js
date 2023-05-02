@@ -67,4 +67,18 @@ const deleteReview = async (id) => {
   return {message: `This review is now ${review.active === true ? 'active' : 'disabled'}`}
 }
 
-module.exports = { createReview, getAllReviews, getReviewDetail, deleteReview };
+const userReview = async (user) => {
+  const uReview = await Reviews.findAll({ 
+    where: { 
+      user_name: user,
+       active: true
+      },
+    include: {
+      model: Book,
+    }
+    });
+    return uReview
+}
+
+
+module.exports = { createReview, getAllReviews, getReviewDetail, deleteReview, userReview };
