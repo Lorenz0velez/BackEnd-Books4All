@@ -29,7 +29,7 @@ const getReviewDetail = async (id) => {
   return reviewDetail;
 };
 
-const createReview = async (body, rating, book_id, user_name) => {
+const createReview = async (body, rating, book_id, user_name, user_avatar) => {
   try {
     const book = await Book.findByPk(book_id);
     if (!book) {
@@ -41,6 +41,7 @@ const createReview = async (body, rating, book_id, user_name) => {
       rating,
       book_id,
       user_name,
+      user_avatar
     });
 
     await book.addReviews(newReview);
