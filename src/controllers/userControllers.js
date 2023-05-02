@@ -49,7 +49,7 @@ const getDetailUser = async (name) => {
       },
       {
         model: Book,
-        attributes: ["title"],
+        attributes: ["title", "image", "id", "categories"],
         through: {
           attributes: [],
         },
