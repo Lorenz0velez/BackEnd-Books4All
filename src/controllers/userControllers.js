@@ -112,14 +112,13 @@ const addAdminRole = async (name) => {
   return user;
 };
 
-const updateProfile = async (name, picture, email, alterName, about) => {
+const updateProfile = async (name, email, alterName, about) => {
   const user = await User.findOne({
 
     where: { name: name },
   });
 
   if (alterName) user.alterName = alterName;
-  if (picture) user.picture = picture;
   if (email) user.email = email;
   if (about) user.about = about;
 
