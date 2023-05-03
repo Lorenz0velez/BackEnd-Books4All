@@ -15,6 +15,6 @@ mainRouter.use("/users", usersRouter);
 mainRouter.use("/api/stripe", apiRouter);
 mainRouter.use("/deleted", putRouter);
 mainRouter.use("/admin", adminRouter);
-mainRouter.use("/bot", dialogFlowRouter);
+mainRouter.use("/api", dialogFlowRouter);
 
 module.exports = mainRouter;
