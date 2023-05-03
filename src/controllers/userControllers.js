@@ -154,6 +154,16 @@ const updateUserState = async (name) => {
   };
 };
 
+const updateImageUser = async (name, picture) => {
+  const user = await User.findOne({
+    where: { name: name },
+  });
+
+  user.picture = picture;
+  user.save();
+
+  return { updatedUser: user, message: "Profile successfully updated" };
+}
 
 
 
@@ -167,4 +177,5 @@ module.exports = {
   updateUserState,
   createFavorite,
   removeFavorite,
+  updateImageUser
 };
