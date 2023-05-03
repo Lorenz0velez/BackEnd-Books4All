@@ -29,7 +29,7 @@ const getReviewDetail = async (id) => {
   return reviewDetail;
 };
 
-const createReview = async (body, rating, book_id, user_name) => {
+const createReview = async (body, rating, book_id, user_name, user_avatar) => {
   try {
     const book = await Book.findByPk(book_id);
     if (!book) {
@@ -41,6 +41,7 @@ const createReview = async (body, rating, book_id, user_name) => {
       rating,
       book_id,
       user_name,
+      user_avatar
     });
 
     await book.addReviews(newReview);
@@ -67,4 +68,23 @@ const deleteReview = async (id) => {
   return {message: `This review is now ${review.active === true ? 'active' : 'disabled'}`}
 }
 
-module.exports = { createReview, getAllReviews, getReviewDetail, deleteReview };
+const userReview = async (user) => {
+  const uReview = await Reviews.findAll({ 
+    where: { 
+      user_name: user,
+       active: true
+      },
+    include: {
+      model: Book,
+    }
+    });
+    return uReview
+}
+const updateReview = async (id, body, rating) => {
+  const review = await Reviews.findOne({where:{id: id}})
+  await review.update({rating: rating, body:body})
+  return "Review Updated"
+}
+
+
+module.exports = { createReview, getAllReviews, getReviewDetail, deleteReview, userReview, updateReview };

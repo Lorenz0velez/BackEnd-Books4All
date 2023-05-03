@@ -81,7 +81,7 @@ apiRouter.post("/create-checkout-session", async (req, res) => {
     line_items,
     customer: customer.id,
     mode: "payment",
-    success_url: `${process.env.CLIENT_URL}checkout-success`,
+    success_url: `${process.env.CLIENT_URL}checkout-success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${process.env.CLIENT_URL}cart`,
   });
 
@@ -130,11 +130,12 @@ apiRouter.post(
       stripe.customers
         .retrieve(data.customer)
         .then(async (customer) => {
+          //console.log(data);
+          console.log(customer);
           const booksToBuy = customer.metadata.cart;
           const booksToBuyArray = JSON.parse(booksToBuy);
           const user = customer.metadata.userId;
           await createBought(user, booksToBuyArray);
-
           const allBooks = booksToBuyArray.map((book) => book.bookId);
           const eachBook = allBooks.map((id) => id);
           const eachBookDB = await getOneBook(eachBook.map((book) => book));
@@ -148,5 +149,19 @@ apiRouter.post(
     response.send().end();
   }
 );
+
+apiRouter.get('/success', async (req, res) => {
+  try {
+    console.log("queryy", req.query);
+    const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+    const customer = await stripe.customers.retrieve(session.customer);
+    res.json([customer, session]);
+  } catch (error) {
+    res.status(400).send(error.message)
+  }
+
+});
+
+
 
 module.exports = apiRouter;
