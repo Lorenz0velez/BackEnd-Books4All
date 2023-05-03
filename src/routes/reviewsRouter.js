@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getAllReviews, getReviewDetail, createReview, userReview } = require('../controllers/reviewsControllers');
+const { getAllReviews, getReviewDetail, createReview, userReview, updateReview } = require('../controllers/reviewsControllers');
 const authorizationMiddleware = require ('../Middlewares/Middlewares');
 const { checkAuth } = require('../Middlewares/auth');
 
@@ -42,6 +42,18 @@ reviewsRouter.post('/', authorizationMiddleware, async (req, res) => {
     } catch (error) {
         console.log(error.message)
         console.log("no esta ingresado el usuario");
+        res.status(400).send(error.message)
+    }
+})
+reviewsRouter.put('/', async (req, res) => {
+    const {id, body, rating} = req.body;
+    console.log(id)
+    try {
+        let response = await updateReview(id, body, rating)
+        res.status(200).send(response);
+        
+    } catch (error) {
+        console.log(error.message)
         res.status(400).send(error.message)
     }
 })

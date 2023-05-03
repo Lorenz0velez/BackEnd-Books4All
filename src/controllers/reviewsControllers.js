@@ -80,6 +80,11 @@ const userReview = async (user) => {
     });
     return uReview
 }
+const updateReview = async (id, body, rating) => {
+  const review = await Reviews.findOne({where:{id: id}})
+  await review.update({rating: rating, body:body})
+  return "Review Updated"
+}
 
 
-module.exports = { createReview, getAllReviews, getReviewDetail, deleteReview, userReview };
+module.exports = { createReview, getAllReviews, getReviewDetail, deleteReview, userReview, updateReview };
