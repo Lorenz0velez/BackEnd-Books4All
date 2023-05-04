@@ -6,7 +6,7 @@ const { createRoles } = require("./src/controllers/saveRoles");
 const { sequelize } = require("./src/DB_connection");
 const port = process.env.PORT || 3001;
 
-sequelize.sync({ alter: true }).then(async () => {
+sequelize.sync({ force: true }).then(async () => {
   console.log("connected database, master");
   const books = await getAllBooks();
   await getDeletedBooks();
