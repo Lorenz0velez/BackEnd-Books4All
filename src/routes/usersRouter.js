@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const { User } = require('../DB_connection')
 
-const { getAllUsers, getDetailUser, createUser, updateProfilePic, updateProfile, addAdminRole, createFavorite, removeFavorite} = require('../controllers/userControllers');
+const { getAllUsers, getDetailUser, createUser, updateImageUser, updateProfile, addAdminRole, createFavorite, removeFavorite} = require('../controllers/userControllers');
 
 const usersRouter = Router ();
 
@@ -65,10 +65,21 @@ usersRouter.put('/admin', async (req, res) => {
 
 usersRouter.put('/updateProfile/:name', async (req, res) => {
     const {name} = req.params;
-    const {picture, email, alterName, about} = req.body;
+    const {alterName, about} = req.body;
     try {
-        const updatedUser = await updateProfile(name, picture, email, alterName, about);
+        const updatedUser = await updateProfile(name, alterName, about);
         res.status(200).send(updatedUser)
+    } catch (error) {
+        return res.status(400).send({error: error.message});
+    }
+})
+
+usersRouter.put('/updateProfilePic/:name', async (req, res) => {
+    const {name} = req.params;
+    const {picture} = req.body;
+    try {
+        const updateUserImg = await updateImageUser(name, picture)
+        res.status(200).send(updateUserImg.message)
     } catch (error) {
         return res.status(400).send({error: error.message});
     }

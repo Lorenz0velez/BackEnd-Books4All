@@ -32,9 +32,13 @@ async function createBought(user, booksToBuyArray) {
   const bought = await Bought.create({
     books: boughtBooks,
     userId: userRecord.id,
-  
+
   });
 
+  for (const b of boughtBooks) {
+    const book = await Book.findByPk(b.bookId);
+    await book.update({ stock: book.stock - b.quantity });
+  }
 
   await userRecord.addBought(bought);
   return bought

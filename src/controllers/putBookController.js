@@ -38,7 +38,7 @@ const updateBookInfo = async (bookId, title, authors, categories, price, stock, 
     title: title,
     authors: [authors],
     categories: [categories],
-    price: price,
+    price: parseInt(price),
     stock: parseInt(stock),
     description: description
   });
@@ -47,4 +47,16 @@ const updateBookInfo = async (bookId, title, authors, categories, price, stock, 
   return {message: 'Book modified successfully'};
 }
 
-module.exports = {putBook, getDeletedBooks, updateBookState, updateBookInfo};
+
+const updateBookPic = async (bookId, picture) => {
+  const book = await Book.findByPk(bookId)
+  if (!book) {
+    throw new Error('Book not found');
+  }
+
+  book.image = picture;
+  await book.save({ fields: ['image']});
+  return {message: 'Picture updated successfully'};
+}
+
+module.exports = {putBook, getDeletedBooks, updateBookState, updateBookInfo, updateBookPic};
