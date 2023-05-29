@@ -8,6 +8,14 @@ const UserModel = require("./Models/User");
 const RoleModel = require("./Models/Role");
 const Boughtmodel = require("./Models/Bought");
 
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
+    {
+        logging: false,
+        alter: true,
+        native: false
+    }
+);
+
 // const sequelize = new Sequelize(
 //   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
 //   {
@@ -16,10 +24,10 @@ const Boughtmodel = require("./Models/Bought");
 //     native: false,
 //   }
 // );
-const sequelize = new Sequelize(DB_DEPLOY, {
-    logging: false, // set to console.log to see the raw SQL queries
-    native: false, // lets Sequelize know we can use pg-native for ~30% more speed
-  });
+// const sequelize = new Sequelize(DB_DEPLOY, {
+//     logging: false, // set to console.log to see the raw SQL queries
+//     native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+//   });
 
 BookModel(sequelize);
 ReviewsModel(sequelize);
